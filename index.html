@@ -139,13 +139,24 @@
   </head>
   <body>
     <script>
+      let zCounter = 1000;
+    
+      function initDraggable() {
+        $(".circle").draggable({
+          start: function () {
+            zCounter += 1;
+            $(this).css("z-index", zCounter);
+          },
+        });
+      }
+    
       function createCustomContainer() {
         const container = document.createElement("div");
         container.className = "container long-container";
-
+    
         const colors = ["orange-red", "green", "blue", "yellow"];
         const circles = [];
-
+    
         for (let color of colors) {
           for (let i = 0; i < 20; i++) {
             const circle = document.createElement("div");
@@ -153,45 +164,44 @@
             circles.push(circle);
           }
         }
-
+    
         const blackLabels = ["Herdimas", "HH", "Jamie", "Luiza"];
         for (let label of blackLabels) {
           const blackCircle = createBlackCircle(label);
           circles.push(blackCircle);
         }
-
+    
         circles.sort(() => Math.random() - 0.5);
-
         circles.forEach((circle) => container.appendChild(circle));
-
+    
         return container;
       }
-
+    
       function createUniformContainer(numCircles, colorClass, blackLabel) {
         const container = document.createElement("div");
         container.className = "container";
-
+    
         for (let i = 0; i < numCircles; i++) {
           const circle = document.createElement("div");
           circle.className = `circle ${colorClass}`;
           container.appendChild(circle);
         }
-
+    
         if (blackLabel) {
           const blackCircle = createBlackCircle(blackLabel);
           container.appendChild(blackCircle);
         }
-
+    
         return container;
       }
-
+    
       function createMixedContainerWithOneBlackCircle(blackLabel) {
         const container = document.createElement("div");
         container.className = "container";
-
+    
         const colors = ["orange-red", "green", "blue", "yellow"];
         const circles = [];
-
+    
         for (let i = 0; i < 5; i++) {
           for (let color of colors) {
             const circle = document.createElement("div");
@@ -199,23 +209,22 @@
             circles.push(circle);
           }
         }
-
+    
         const blackCircle = createBlackCircle(blackLabel);
         circles.push(blackCircle);
-
+    
         circles.sort(() => Math.random() - 0.5);
-
         circles.forEach((circle) => container.appendChild(circle));
-
+    
         return container;
       }
-
+    
       function createEmptyContainer() {
         const container = document.createElement("div");
         container.className = "container";
         return container;
       }
-
+    
       function createBlackCircle(label) {
         const blackCircle = document.createElement("div");
         blackCircle.className = "circle black-circle";
@@ -224,34 +233,32 @@
         blackCircle.appendChild(labelSpan);
         return blackCircle;
       }
-
+    
       function createRow(rowNumber) {
         const rowContainer = document.createElement("div");
         rowContainer.className = "row-container";
-
+    
         const tag = document.createElement("div");
         tag.className = "tag";
         tag.textContent = rowNumber % 2 === 0 ? "F" : "T/W/Th";
         rowContainer.appendChild(tag);
-
+    
         const row = document.createElement("div");
         row.className = `row row${String(rowNumber).padStart(2, "0")}`;
-
+    
         if (rowNumber === 2) {
           const toggleButton = document.createElement("button");
           toggleButton.className = "toggle-button";
           toggleButton.textContent = "Toggle";
           toggleButton.onclick = toggleRow02;
           rowContainer.appendChild(toggleButton);
-
+    
           row.appendChild(createCustomContainer());
           row.dataset.state = "long";
         } else if (rowNumber === 10) {
           row.appendChild(createCustomContainer());
         } else if (rowNumber === 7 || rowNumber === 17 || rowNumber === 18) {
-          for (let i = 0; i < 4; i++) {
-            row.appendChild(createEmptyContainer());
-          }
+          for (let i = 0; i < 4; i++) row.appendChild(createEmptyContainer());
         } else if ([12, 14, 16, 20, 22, 24, 26, 28, 30].includes(rowNumber)) {
           const blackLabels = ["Herdimas", "HH", "Jamie", "Luiza"];
           for (let label of blackLabels) {
@@ -264,21 +271,20 @@
             { class: "blue", label: "Jamie" },
             { class: "yellow", label: "Luiza" },
           ];
-
+    
           for (let { class: colorClass, label } of colors) {
             row.appendChild(createUniformContainer(20, colorClass, label));
           }
         }
-
+    
         rowContainer.appendChild(row);
-
         return rowContainer;
       }
-
+    
       function toggleRow02() {
         const row02 = document.querySelector(".row02");
         row02.innerHTML = "";
-
+    
         if (row02.dataset.state === "long") {
           const colors = [
             { class: "orange-red", label: "Herdimas" },
@@ -286,7 +292,7 @@
             { class: "blue", label: "Jamie" },
             { class: "yellow", label: "Luiza" },
           ];
-
+    
           for (let { class: colorClass, label } of colors) {
             row02.appendChild(createUniformContainer(20, colorClass, label));
           }
@@ -295,47 +301,36 @@
           row02.appendChild(createCustomContainer());
           row02.dataset.state = "long";
         }
-
-        $(".circle").draggable({
-          start: function () {
-            zCounter += 1;
-            $(this).css("z-index", zCounter);
-          },
-        });
+    
+        initDraggable();
       }
-
+    
       for (let week = 1; week <= 15; week++) {
         const weekContainer = document.createElement("div");
         weekContainer.className = "week-container";
-
+    
         const weekTag = document.createElement("div");
         weekTag.className = "week-tag";
         weekTag.textContent = `Week ${String(week).padStart(2, "0")}`;
         weekContainer.appendChild(weekTag);
-
+    
         const startRow = (week - 1) * 2 + 1;
         weekContainer.appendChild(createRow(startRow));
         weekContainer.appendChild(createRow(startRow + 1));
-
+    
         document.body.appendChild(weekContainer);
-
+    
         if (week !== 15) {
           const divider = document.createElement("div");
           divider.className = "divider";
           document.body.appendChild(divider);
         }
       }
-
+    
       $(document).ready(function () {
-        let zCounter = 1000;
-
-        $(".circle").draggable({
-          start: function () {
-            zCounter += 1;
-            $(this).css("z-index", zCounter);
-          },
-        });
+        initDraggable();
       });
     </script>
+    
   </body>
 </html>
