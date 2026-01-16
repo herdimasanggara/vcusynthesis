@@ -73,9 +73,7 @@
       }
 
       .long-container {
-        width: calc(
-          4 * 200px + 3 * 30px
-        );
+        width: calc(4 * 200px + 3 * 30px);
       }
 
       .circle {
@@ -84,6 +82,7 @@
         margin: 5px;
         border-radius: 50%;
         cursor: grab;
+        position: relative;
       }
 
       .orange-red {
@@ -155,7 +154,7 @@
           }
         }
 
-        const blackLabels = ["Herdimas", "HH", "Luiza", "Steven"];
+        const blackLabels = ["Herdimas", "HH", "Jamie", "Luiza"];
         for (let label of blackLabels) {
           const blackCircle = createBlackCircle(label);
           circles.push(blackCircle);
@@ -254,7 +253,7 @@
             row.appendChild(createEmptyContainer());
           }
         } else if ([12, 14, 16, 20, 22, 24, 26, 28, 30].includes(rowNumber)) {
-          const blackLabels = ["Herdimas", "HH", "Luiza", "Steven"];
+          const blackLabels = ["Herdimas", "HH", "Jamie", "Luiza"];
           for (let label of blackLabels) {
             row.appendChild(createMixedContainerWithOneBlackCircle(label));
           }
@@ -262,8 +261,8 @@
           const colors = [
             { class: "orange-red", label: "Herdimas" },
             { class: "green", label: "HH" },
-            { class: "blue", label: "Luiza" },
-            { class: "yellow", label: "Steven" },
+            { class: "blue", label: "Jamie" },
+            { class: "yellow", label: "Luiza" },
           ];
 
           for (let { class: colorClass, label } of colors) {
@@ -284,8 +283,8 @@
           const colors = [
             { class: "orange-red", label: "Herdimas" },
             { class: "green", label: "HH" },
-            { class: "blue", label: "Luiza" },
-            { class: "yellow", label: "Steven" },
+            { class: "blue", label: "Jamie" },
+            { class: "yellow", label: "Luiza" },
           ];
 
           for (let { class: colorClass, label } of colors) {
@@ -297,7 +296,12 @@
           row02.dataset.state = "long";
         }
 
-        $(".circle").draggable();
+        $(".circle").draggable({
+          start: function () {
+            zCounter += 1;
+            $(this).css("z-index", zCounter);
+          },
+        });
       }
 
       for (let week = 1; week <= 15; week++) {
@@ -323,7 +327,14 @@
       }
 
       $(document).ready(function () {
-        $(".circle").draggable();
+        let zCounter = 1000;
+
+        $(".circle").draggable({
+          start: function () {
+            zCounter += 1;
+            $(this).css("z-index", zCounter);
+          },
+        });
       });
     </script>
   </body>
